@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Valentine Swans</title>
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #ff99cc, #ff6699, #ff3366);
+            font-family: 'Arial', sans-serif;
+            overflow: hidden;
+            color: #fff;
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            animation: fadeIn 2s ease-in-out;
+        }
+
+        .container {
+            position: relative;
+            width: 100%;
+            height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .swan {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            transition: all 1s ease-in-out;
+            transform-origin: 50% 150px;
+        }
+
+        #swan1 {
+            left: 5%;
+            transform: rotate(30deg);
+        }
+
+        #swan2 {
+            right: 5%;
+            transform: rotate(30deg);
+        }
+
+        .swan::before {
+            content: "🦢";
+            font-size: 80px;
+            position: absolute;
+        }
+
+        .hearts {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .heart {
+            position: absolute;
+            font-size: 24px;
+            opacity: 0;
+            animation: float 3s linear forwards;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0) scale(1);
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateY(-100px) scale(0.5);
+                opacity: 0;
+            }
+        }
+
+        .buttons {
+            margin-top: 50px;
+            display: flex;
+            gap: 20px;
+        }
+
+        button {
+            padding: 15px 30px;
+            font-size: 18px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        #yes {
+            background: linear-gradient(135deg, #ff3366, #ff6699);
+            color: white;
+        }
+
+        #yes:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        #no {
+            background: linear-gradient(135deg, #666, #999);
+            color: white;
+        }
+
+        #no:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .message {
+            position: absolute;
+            top: 30%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 2rem;
+            color: #ffffff;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            opacity: 0;
+            animation: fadeIn 2s forwards 1s;
+            text-align: center;
+            width: 80%;
+        }
+
+        .gif-container {
+            position: relative;
+            margin-top: 200px;
+
+            animation: fadeIn 2s ease-in-out;
+            display: none;
+            /* Initially hide the GIF */
+        }
+
+        .gif-container img {
+            border-radius: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Will You Be My Valentine? 💖</h1>
+    <div class="container">
+        <div class="hearts" id="hearts"></div>
+        <div class="swan" style="transform: scaleX(1)" id="swan1"></div>
+        <div class="swan" style="transform: scaleX(-1)" id="swan2"></div>
+    </div>
+    <div class="gif-container" id="gif">
+        <img src="https://www.icegif.com/wp-content/uploads/valentines-day-icegif-30.gif" alt="Cute Valentine GIF">
+    </div>
+    <div class="buttons">
+        <button id="yes">Yes!</button>
+        <button id="no" style="left: 35%; transition: transform 0.3s;">No</button>
+    </div>
+
+    <script>
+        const swan1 = document.getElementById('swan1');
+        const swan2 = document.getElementById('swan2');
+        const yesBtn = document.getElementById('yes');
+        const noBtn = document.getElementById('no');
+        const heartsContainer = document.getElementById('hearts');
+        const gif = document.getElementById('gif');
+
+        let currentPosition = 35;
+        let isTogether = false;
+
+        yesBtn.addEventListener('click', () => {
+            if (currentPosition < 45) {
+                currentPosition += 10;
+                swan1.style.left = currentPosition - 1.5 + '%';
+                swan2.style.right = currentPosition - 1.5 + '%';
+
+                const rotationAmount = 30 - (30 * (currentPosition - 35)) / 10;
+                swan1.style.transform = `scaleX(1) rotateY(180deg) rotate(${rotationAmount}deg)`;
+                swan2.style.transform = `scaleX(-1) rotateY(-180deg) rotate(${-rotationAmount}deg)`;
+
+                gif.style.display = 'block';
+
+                if (currentPosition >= 45 && !isTogether) {
+                    createHearts();
+                    isTogether = true;
+                    gif.style.display = 'block';
+                }
+            }
+        });
+
+        noBtn.addEventListener('mouseover', () => {
+            noBtn.style.transform = `translate(${Math.random() * 1000 - 50}px, ${Math.random() * 100 - 50}px)`;
+        });
+
+        function createHearts() {
+            for (let i = 0; i < 50; i++) {
+                const heart = document.createElement('div');
+                heart.className = 'heart';
+                heart.style.left = Math.random() * 100 + '%';
+                heart.style.animationDelay = i * 0.1 + 's';
+                heart.innerHTML = '💖';
+                heartsContainer.appendChild(heart);
+            }
+
+            // Add final message
+            const message = document.createElement('div');
+            message.className = 'message';
+            message.innerHTML = "Happy Valentine’s Day Baby!! You will be getting a package soon too (when I ship it haha), I love you baby <3 - Avi";
+            document.body.appendChild(message);
+        }
+    </script>
+</body>
+
+</html>
